@@ -19,6 +19,7 @@ public class Go extends JFrame {
 	String[]sizes = {"19x19","13x13","9x9","25x25","21x21","5x5"};
 
 	komi = new JTextField("6.5");
+	pane.add(komi);
     }
 
     public static void main(String[] args) {
