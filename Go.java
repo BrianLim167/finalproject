@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 public class Go extends JFrame implements ActionListener {
     private Container pane;
+    private JPanel row0,row1,row2;
     private JLabel dimensionsL,handicapL,komiL,title;
     private JComboBox<String> dimensions,handicap;
     private JTextField komi;
@@ -12,13 +13,16 @@ public class Go extends JFrame implements ActionListener {
     //CONSTRUCTOR SETS EVERYTHING UP
     public Go() {
 	this.setTitle("Go Setup");
-	this.setSize(600,400);
-	this.setLocation(500,400);
+	this.setSize(300,130);
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     
 	pane = this.getContentPane();
-	pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-     
+	pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));     
+
+	row0 = new JPanel(new FlowLayout());
+	row1 = new JPanel(new FlowLayout());
+	row2 = new JPanel(new FlowLayout());
+
 	String[]sizes = {"19x19","13x13","9x9","25x25","21x21","5x5"};
 	String[]handi = {"0","1","2","3","4","5","6","7","8","9"};
 
@@ -32,13 +36,18 @@ public class Go extends JFrame implements ActionListener {
 
 	play.addActionListener(this);
 	play.setActionCommand("Boat");
+	play.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-	pane.add(dimensionsL);
-	pane.add(dimensions);
-	pane.add(komiL);
-	pane.add(komi);
-	pane.add(handicapL);
-	pane.add(handicap);
+	row0.add(dimensionsL);
+	row0.add(dimensions);
+	row1.add(komiL);
+	row1.add(komi);
+	row2.add(handicapL);
+	row2.add(handicap);
+
+	pane.add(row0);
+	pane.add(row1);
+	pane.add(row2);
 	pane.add(play);
     }
 
@@ -53,6 +62,7 @@ public class Go extends JFrame implements ActionListener {
     public static void main(String[] args) {
 	Go g = new Go();
 	g.setVisible(true);
+	g.setLocationRelativeTo(null);
     }
 }
 
