@@ -20,15 +20,25 @@ public class Go extends JFrame implements ActionListener {
 	pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
      
 	String[]sizes = {"19x19","13x13","9x9","25x25","21x21","5x5"};
+	String[]handi = {"0","1","2","3","4","5","6","7","8","9"};
 
-	komiL = new JLabel("Komi");
+	dimensionsL = new JLabel("Dimensions ");
+	dimensions = new JComboBox(sizes);
+	komiL = new JLabel("Komi ");
 	komi = new JTextField("6.5");
-	JButton play = new JButton("PLAY");
+	handicapL = new JLabel("Handicap Stones ");
+	handicap = new JComboBox(handi);
+	play = new JButton("PLAY");
+
 	play.addActionListener(this);
 	play.setActionCommand("Boat");
-	
+
+	pane.add(dimensionsL);
+	pane.add(dimensions);
 	pane.add(komiL);
 	pane.add(komi);
+	pane.add(handicapL);
+	pane.add(handicap);
 	pane.add(play);
     }
 
