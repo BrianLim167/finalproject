@@ -56,6 +56,10 @@ public class Go extends JFrame implements ActionListener {
 	if (event.equals("Boat")) {
 	    String s = "tree fiddy";
 	    komiL.setText(s);
+	    dispose();
+	    GoBoard b = new GoBoard();
+	    b.setVisible(true);
+	    b.setLocationRelativeTo(null);
 	}
     }
 
@@ -66,3 +70,6 @@ public class Go extends JFrame implements ActionListener {
     }
 }
 
+class GoBoard extends JFrame {
+    private Container pane;
+}
