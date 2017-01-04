@@ -5,7 +5,7 @@ import java.awt.event.*;
 public class Go extends JFrame implements ActionListener {
     private Container pane;
     private JLabel dimensionsL,handicapL,komiL,title;
-    private JComboBox dimensions,handicap;
+    private JComboBox<String> dimensions,handicap;
     private JTextField komi;
     private JButton play;
  
@@ -23,11 +23,11 @@ public class Go extends JFrame implements ActionListener {
 	String[]handi = {"0","1","2","3","4","5","6","7","8","9"};
 
 	dimensionsL = new JLabel("Dimensions ");
-	dimensions = new JComboBox(sizes);
+	dimensions = new JComboBox<String>(sizes);
 	komiL = new JLabel("Komi ");
 	komi = new JTextField("6.5");
 	handicapL = new JLabel("Handicap Stones ");
-	handicap = new JComboBox(handi);
+	handicap = new JComboBox<String>(handi);
 	play = new JButton("PLAY");
 
 	play.addActionListener(this);
