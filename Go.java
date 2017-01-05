@@ -12,8 +12,7 @@ public class Go extends JFrame implements ActionListener {
  
     //CONSTRUCTOR SETS EVERYTHING UP
     public Go() {
-	this.setTitle("Go Setup");
-	this.setSize(300,130);
+	this.setTitle("Go");
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     
 	pane = this.getContentPane();
@@ -35,7 +34,7 @@ public class Go extends JFrame implements ActionListener {
 	play = new JButton("PLAY");
 
 	play.addActionListener(this);
-	play.setActionCommand("Boat");
+	play.setActionCommand("Run");
 	play.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 	row0.add(dimensionsL);
@@ -49,13 +48,13 @@ public class Go extends JFrame implements ActionListener {
 	pane.add(row1);
 	pane.add(row2);
 	pane.add(play);
+
+	pack();
     }
 
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
-	if (event.equals("Boat")) {
-	    String s = "tree fiddy";
-	    komiL.setText(s);
+	if (event.equals("Run")) {
 	    dispose();
 	    GoBoard b = new GoBoard();
 	    b.setVisible(true);
@@ -70,6 +69,6 @@ public class Go extends JFrame implements ActionListener {
     }
 }
 
-class GoBoard extends JFrame {
+class GoBoardFrame extends JFrame {
     private Container pane;
 }
