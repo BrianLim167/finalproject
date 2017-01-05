@@ -56,7 +56,7 @@ public class Go extends JFrame implements ActionListener {
 	String event = e.getActionCommand();
 	if (event.equals("Run")) {
 	    dispose();
-	    GoBoard b = new GoBoard();
+	    GoBoardFrame b = new GoBoardFrame();
 	    b.setVisible(true);
 	    b.setLocationRelativeTo(null);
 	}
