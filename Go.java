@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 public class Go extends JFrame implements ActionListener {
     private Container pane;
@@ -71,4 +74,17 @@ public class Go extends JFrame implements ActionListener {
 
 class GoBoardFrame extends JFrame {
     private Container pane;
+    private JButton button;
+    /*
+    BufferedImage middle = ImageIO.read(new File("temp.png"));
+
+    public GoBoardFrame() {
+	button = new JButton(new ImageIcon(middle));
+	button.setBorder(BorderFactory.createEmptyBorder());
+	button.setContentAreaFilled(false);
+
+	pane.add(button);
+    
+    }
+    */
 }
