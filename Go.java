@@ -75,6 +75,14 @@ public class Go extends JFrame implements ActionListener {
 
 class GoBoardFrame extends JFrame implements ActionListener {
     private Container pane;
+    private char currentPlayer;
+    private char[][] board;
+    private JLabel currentPlayerL;                     //top of window
+    private JLabel blackPrisoners,whitePrisoners,komi; //scoreBoard
+    private JButton[][] boardGUI;                      //boardPanel
+    private JButton pass,resign;                       //buttonPanel
+    private JPanel boardPanel,scoreBoard,buttonPanel;
+
     private JButton button;
 
     public GoBoardFrame() {
@@ -82,8 +90,10 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     
 	pane = this.getContentPane();
-	pane.setLayout(new FlowLayout());
+	pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 	
+	currentPlayerL = new JLabel("");
+
 	try {
 	Image middle = ImageIO.read(new File("temp.png"));
 	button = new JButton(new ImageIcon(middle));
@@ -94,8 +104,6 @@ class GoBoardFrame extends JFrame implements ActionListener {
 
 	button.addActionListener(this);
 	button.setActionCommand("test");
-
-	
 
 	pack();
 	}catch (IOException e){
