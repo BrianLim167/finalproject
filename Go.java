@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.IOException;
 
 public class Go extends JFrame implements ActionListener {
     private Container pane;
@@ -72,19 +73,40 @@ public class Go extends JFrame implements ActionListener {
     }
 }
 
-class GoBoardFrame extends JFrame {
+class GoBoardFrame extends JFrame implements ActionListener {
     private Container pane;
     private JButton button;
-    /*
-    BufferedImage middle = ImageIO.read(new File("temp.png"));
 
     public GoBoardFrame() {
+	this.setTitle("Go");
+	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    
+	pane = this.getContentPane();
+	pane.setLayout(new FlowLayout());
+	
+	try {
+	Image middle = ImageIO.read(new File("temp.png"));
 	button = new JButton(new ImageIcon(middle));
 	button.setBorder(BorderFactory.createEmptyBorder());
 	button.setContentAreaFilled(false);
 
 	pane.add(button);
-    
+
+	button.addActionListener(this);
+	button.setActionCommand("test");
+
+	
+
+	pack();
+	}catch (IOException e){
+	    System.out.println(e);
+	}
     }
-    */
+    public void actionPerformed(ActionEvent e) {
+	String event = e.getActionCommand();
+	if (event.equals("test")) {
+	    this.setTitle("Stop");
+	}
+    }
+
 }
