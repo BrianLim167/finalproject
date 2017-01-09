@@ -60,7 +60,8 @@ public class Go extends JFrame implements ActionListener {
 	String event = e.getActionCommand();
 	if (event.equals("Run")) {
 	    dispose();
-	    GoBoardFrame b = new GoBoardFrame();
+	    GoBoardFrame b = new GoBoardFrame(9,9);
+	    // ^set this to variable dimensions later
 	    b.setVisible(true);
 	    b.setLocationRelativeTo(null);
 	}
@@ -77,7 +78,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
     private Container pane;
     private char currentPlayer;
     private char[][] board;
-    private JLabel currentPlayerL;                     //top of window
+    private JLabel currentPlayerL,message;             //top of window
     private JLabel blackPrisoners,whitePrisoners,komi; //scoreBoard
     private JButton[][] boardGUI;                      //boardPanel
     private JButton pass,resign;                       //buttonPanel
@@ -85,30 +86,57 @@ class GoBoardFrame extends JFrame implements ActionListener {
 
     private JButton button;
 
-    public GoBoardFrame() {
+    public GoBoardFrame(int x,int y) {
 	this.setTitle("Go");
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     
 	pane = this.getContentPane();
 	pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 	
-	currentPlayerL = new JLabel("");
+	currentPlayerL = new JLabel("Black to play");
 
-	try {
-	Image middle = ImageIO.read(new File("temp.png"));
-	button = new JButton(new ImageIcon(middle));
-	button.setBorder(BorderFactory.createEmptyBorder());
-	button.setContentAreaFilled(false);
+	boardPanel = new JPanel();
+	boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.Y_AXIS));
+	for (int row=0 ; row<x ; row++){
+	    JPanel boardRow = new JPanel();
+	    boardRow.setLayout(new FlowLayout());
+	    for (int col=0 ; col<y ; col++){
+		try {
+		    Image buttonImage = ImageIO.read(new File("temp.png"));
+		    button = new JButton(new ImageIcon(buttonImage));
+		    button.setBorder(BorderFactory.createEmptyBorder());
+		    button.setContentAreaFilled(false);
 
-	pane.add(button);
+		    boardRow.add(button);
 
-	button.addActionListener(this);
-	button.setActionCommand("test");
-
-	pack();
-	}catch (IOException e){
-	    System.out.println(e);
+		    button.addActionListener(this);
+		    button.setActionCommand("test");
+		}catch (IOException e){
+		    System.out.println(e);
+		}
+	    }
+	    boardPanel.add(boardRow);
 	}
+		
+	/*
+	  try {
+	  Image middle = ImageIO.read(new File("temp.png"));
+	  button = new JButton(new ImageIcon(middle));
+	  button.setBorder(BorderFactory.createEmptyBorder());
+	  button.setContentAreaFilled(false);
+
+	  pane.add(button);
+
+	  button.addActionListener(this);
+	  button.setActionCommand("test");
+	  }catch (IOException e){
+	  System.out.println(e);
+	  }*/
+
+	pane.add(currentPlayerL);
+	pane.add(boardPanel);
+	
+	pack();
     }
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
