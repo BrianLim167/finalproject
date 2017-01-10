@@ -259,17 +259,28 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	if (event.indexOf(",") > -1) { // comma means it's an x,y coordinate
 	    int x = Integer.parseInt(event.substring(0, event.indexOf(",")));
 	    int y = Integer.parseInt(event.substring(event.indexOf(",") + 1));
+	    boolean[][] isDead;
 	    String s = currentPlayerL.getText();
 	    if (placeStone(x, y)) {
 	        if (s.equals("Black to play")) {
 		    currentPlayerL.setText("White to play");
+		    isDead = markDead(board, 'B');
 		}
-		if (s.equals("White to play")) {
+	        else {
 		    currentPlayerL.setText("Black to play");
+		    isDead = markDead(board, 'W');
+		}
+		for (int row = 0; row < isDead.length; row ++) {
+		    for (int col = 0; col < isDead[row].length; col ++) {
+			if (isDead[row][col] == false) {
+			    boardGUI[row][col].setIcon(new ImageIcon("temp.png"));
+			    board[row][col] = 'E';
+			}
+		    }
 		}
 	    }
 	}
-    
+	
 	//<<<<<<< HEAD
     }
     public static boolean[][] markDead(char[][] board,char me) {
