@@ -263,22 +263,33 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    boolean[][] isDead;
 	    String s = currentPlayerL.getText();
 	    if (placeStone(x, y)) {
+		char me;
 	        if (s.equals("Black to play")) {
+		    me = 'B';
 		    currentPlayerL.setText("White to play");
 		    isDead = markDead(board, 'B');
 		}
 	        else {
+		    me = 'W';
 		    currentPlayerL.setText("Black to play");
 		    isDead = markDead(board, 'W');
 		}
 		for (int row = 0; row < isDead.length; row ++) {
 		    for (int col = 0; col < isDead[row].length; col ++) {
 			if (isDead[row][col] == true) {
+			    if (board[row][col] == 'B') {
+				whitePrisoners++;
+			    }
+			    else {
+				blackPrisoners++;
+			    }
 			    boardGUI[row][col].setIcon(new ImageIcon("temp.png"));
 			    board[row][col] = 'E';
 			}
 		    }
 		}
+		blackPrisonersL.setText("Black Captures: "+blackPrisoners);
+		whitePrisonersL.setText("White Captures: "+whitePrisoners);
 	    }
 	}
 	
@@ -316,37 +327,37 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	}
 	System.out.println("=end=\n\n");
 
-	//boolean[][]oldAns = new boolean[board.length][board[0].length];
+	boolean[][]oldAns = new boolean[board.length][board[0].length];
 	//System.out.println(oldAns[0][0]);
 	//System.out.println(".");
 	//System.out.println(ans[0][0]);
-	//	while (ans != oldAns){
-	for (int n=0 ; n<360 ; n++){
-	    //oldAns = ans;
-	    for (int stone=marked.size()-1 ; stone>=0 ; stone--){
-		int[] coord = new int[2];   //coordinates of this stone
-		coord[0] = marked.get(stone)[0];
-		coord[1] = marked.get(stone)[1];
-		int[] dimensions = new int[2];
-		dimensions[0] = board.length;
-		dimensions[1] = board[0].length;
-		for (int neighbor=0 ;
-		     neighbor<neighbors(coord,dimensions).size() ;
-		     neighbor++)
-		    {
-			int[] adj = neighbors(coord,dimensions).get(neighbor);
-			// ^coordinates of adjacent space
-			System.out.println(Arrays.toString(adj));
-			if (board[adj[0]][adj[1]] == 'E' ||
-			    (board[adj[0]][adj[1]] == board[coord[0]][coord[1]] &&
-			     ans[adj[0]][adj[1]] == false))
-			    {
-				ans[coord[0]][coord[1]] = false;
-				//marked.remove(stone);
-			    }
-		    }
+	while (ans != oldAns){
+	    for (int n=0 ; n<360 ; n++){
+		oldAns = ans;
+		for (int stone=marked.size()-1 ; stone>=0 ; stone--){
+		    int[] coord = new int[2];   //coordinates of this stone
+		    coord[0] = marked.get(stone)[0];
+		    coord[1] = marked.get(stone)[1];
+		    int[] dimensions = new int[2];
+		    dimensions[0] = board.length;
+		    dimensions[1] = board[0].length;
+		    for (int neighbor=0 ;
+			 neighbor<neighbors(coord,dimensions).size() ;
+			 neighbor++)
+			{
+			    int[] adj = neighbors(coord,dimensions).get(neighbor);
+			    // ^coordinates of adjacent space
+			    System.out.println(Arrays.toString(adj));
+			    if (board[adj[0]][adj[1]] == 'E' ||
+				(board[adj[0]][adj[1]] == board[coord[0]][coord[1]] &&
+				 ans[adj[0]][adj[1]] == false))
+				{
+				    ans[coord[0]][coord[1]] = false;
+				    //marked.remove(stone);
+				}
+			}
+		}
 	    }
-		
 	}
 	return ans;
     }
