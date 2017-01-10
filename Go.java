@@ -91,12 +91,13 @@ class GoBoardFrame extends JFrame implements ActionListener {
     private int blackPrisoners,whitePrisoners;
     private double komi;
     private int handicap;
+    private boolean passed;
     private JButton[][] boardGUI;
     private JLabel currentPlayerL,messageL;               //top of window
     private JLabel blackPrisonersL,whitePrisonersL,komiL; //scoreBoard
     private JButton pass,resign;                          //buttonPanel
     private JPanel boardPanel,scoreBoard,buttonPanel;
-
+    
     private JButton button;
 
     public GoBoardFrame(int x, int y, double komi, int handicap) {
@@ -117,6 +118,8 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	this.komi = komi;
 
 	this.handicap = handicap;
+
+	passed = false;
 	
 	boardGUI = new JButton[x][y];
 	
@@ -231,6 +234,17 @@ class GoBoardFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
 	if (event.equals("pass")) {
+	    if (passed == true){
+		pass.setActionCommand("turkey");
+		resign.setActionCommand("turkey");
+		for (int row = 0; row < boardGUI.length; row ++) {
+		    for (int col = 0; col < boardGUI[row].length; col ++) {
+			boardGUI[row][col].setActionCommand("turkey");
+		    }
+		}
+		currentPlayerL.setText("Game has ended.");
+	    }
+	    passed = true;
 	    String s = currentPlayerL.getText();
 	    if (s.equals("Black to play")) {
 		currentPlayerL.setText("White to play");
@@ -238,6 +252,9 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    if (s.equals("White to play")) {
 		currentPlayerL.setText("Black to play");
 	    }
+	}
+	else {
+	    passed = false;
 	}
 
 	if (event.equals("resign")) {
