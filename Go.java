@@ -222,8 +222,29 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	//System.out.println(ans[0][0]);
 	while (ans != oldAns){
 	    oldAns = ans;
-	    for (int ind=0 ; ind<marked.size() ; ind++){
+	    for (int stone=marked.size()-1 ; stone>=0 ; stone--){
+		int[] coord = new int[2];   //coordinates of this stone
+		coord[0] = marked.get(stone)[0];
+		coord[1] = marked.get(stone)[1];
+		int[] dimensions = new int[2];
+		dimensions[0] = board.length;
+		dimensions[1] = board[0].length;
+		for (int neighbor=0 ;
+		     neighbor<neighbors(coord,dimensions).size() ;
+		     neighbor++)
+		    {
+			int[] adj = neighbors(coord,dimensions).get(neighbor);
+			// ^coordinates of adjacent space
+			if (board[adj[0]][adj[1]] == 'E' ||
+			    board[adj[0]][adj[1]] == me &&
+			    ans[adj[0]][adj[1]] == false)
+			    {
+			    ans[coord[0]][coord[1]] = false;
+			    marked.remove(stone);
+			}
+		    }
 	    }
+		
 	}
 	return ans;
     }
