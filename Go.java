@@ -37,6 +37,7 @@ public class Go extends JFrame implements ActionListener {
 	handicap = new JComboBox<String>(handi);
 	play = new JButton("PLAY");
 
+	//dimensions.addActionListener(this);
 	play.addActionListener(this);
 	play.setActionCommand("Run");
 	play.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -59,13 +60,16 @@ public class Go extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
 	if (event.equals("Run")) {
-	    //int x =                            FIX ME PENN PLS FIX YES
-	    //int y =                            FIX ME PENN PLS FIX YES
-	    //double komi =                            FIX ME PENN PLS FIX YES
-	    //int handicap = Integer.parse                            FIX ME PENN PLS FIX YES
+	    String sizeInput = (String)dimensions.getSelectedItem(); // converts JComboBox input into a String
+	    int x = Integer.parseInt(sizeInput.substring(0, sizeInput.indexOf("x")));
+	    int y = Integer.parseInt(sizeInput.substring(sizeInput.indexOf("x") + 1));
+	    
+	    int handicapInput = Integer.parseInt((String)handicap.getSelectedItem());
+	    
+	    double komiInput = Double.parseDouble(komi.getText());
+	    
 	    dispose();
-	    GoBoardFrame b = new GoBoardFrame(5,5,6.5,0);
-	    // ^set this to variables later
+	    GoBoardFrame b = new GoBoardFrame(x, y, komiInput, handicapInput);
 	    b.setVisible(true);
 	    b.setLocationRelativeTo(null);
 	}
@@ -93,7 +97,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 
     private JButton button;
 
-    public GoBoardFrame(int x,int y, double komi, int handicap) {
+    public GoBoardFrame(int x, int y, double komi, int handicap) {
 	this.setTitle("Go");
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     
@@ -188,9 +192,27 @@ class GoBoardFrame extends JFrame implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
-	if (event.equals("test")) {
-	    this.setTitle("Stop");
+	if (event.equals("pass")) {
+	    String s = currentPlayerL.getText();
+	    if (s.equals("Black to play")) {
+		currentPlayerL.setText("White to play");
+	    }
+	    if (s.equals("White to play")) {
+		currentPlayerL.setText("Black to play");
+	    }
+	}
+
+	if (event.equals("resign")) {
+	    pass.setActionCommand("turkey");
+	    resign.setActionCommand("turkey");
+	    String s = currentPlayerL.getText().substring(0, 5);
+	    if (s.equals("Black")) {
+		currentPlayerL.setText("White wins by forfeit!");
+	    }
+	    if (s.equals("White")) {
+		currentPlayerL.setText("Black wins by forfeit!");
+	    }
 	}
     }
-
 }
+
