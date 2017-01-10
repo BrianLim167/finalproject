@@ -59,6 +59,10 @@ public class Go extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
 	if (event.equals("Run")) {
+	    //int x =                            FIX ME PENN PLS FIX YES
+	    //int y =                            FIX ME PENN PLS FIX YES
+	    //double komi =                            FIX ME PENN PLS FIX YES
+	    //int handicap = Integer.parse                            FIX ME PENN PLS FIX YES
 	    dispose();
 	    GoBoardFrame b = new GoBoardFrame(5,5,6.5,0);
 	    // ^set this to variables later
@@ -112,10 +116,12 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	
 	String currentPlayerS = "Black to play";
 	currentPlayerL = new JLabel(currentPlayerS);
+	currentPlayerL.setAlignmentX(Component.CENTER_ALIGNMENT);
 	
 	String messageS = "Handicap Moves Left: "+handicap;
 	messageL = new JLabel(messageS);
-
+	messageL.setAlignmentX(Component.CENTER_ALIGNMENT);
+	
 	String blackPrisonersS = "Black Captures: "+blackPrisoners;
 	blackPrisonersL = new JLabel(blackPrisonersS);
 
@@ -138,6 +144,8 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	for (int row=0 ; row<x ; row++){
 	    JPanel boardRow = new JPanel();
 	    boardRow.setLayout(new FlowLayout());
+	    ((FlowLayout)boardRow.getLayout()).setHgap(0);
+	    ((FlowLayout)boardRow.getLayout()).setVgap(0);
 	    for (int col=0 ; col<y ; col++){
 		board[row][col] = 'E';
 		try {
