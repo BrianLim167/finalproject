@@ -1,45 +1,50 @@
-class board {
-    private int isOccupied; // 0 = empty, 1 = black, 2 = white
-    private boolean isAlive; // empty spaces are technically alive
-
-    public board() {
-	isOccupied = 0;
-	isAlive = true;
-    }
-
-    public int getIsOccupied() {
-	return isOccupied;
-    }
-
-    public void setIsOccupied(int i) {
-	isOccupied = i;
-    }
-}
-
 public class ArrayTest {
-    public board[][] goBoard;
-    private int blackScore;
-    private int whiteScore;
+    private char[][] board; // b = black, w = white, e = empty
+    private int blackScore, whiteScore;
 
-    public ArrayTest(int size) {
-	goBoard = new board[size][size];
-	for (int row = 0; row < size; row ++) {
-	    for (int col = 0; col < size; col ++) {
-		goBoard[row][col] = new board();
-	    }
-	}
+    public ArrayTest(int size) { // size is determined by the setup window
+	// set initial scores to 0
 	blackScore = 0;
 	whiteScore = 0;
+	// setup the board
+	board = new char[size][size];
+	for (int row = 0; row < size; row ++) {
+	    for (int col = 0; col < size; col ++) {
+		board[row][col] = 'e'; // board is initialized to be empty
+	    }
+	}
     }
 
-    public void click(int row, int col, int turn) {
-	goBoard[row][col].setIsOccupied(turn);
+    public boolean placeStone(int row, int col, char player) {
+	if (board[row][col] != 'e') {
+	    return false; // unable to place stone in occupied space
+	}
+	
+	board[row][col] = player;
+	return true;
+    }
+
+    public char getStatus(int row, int col) {
+	return board[row][col];
+    }
+
+    public int getSize() {
+	return board.length;
+    }
+
+    public void isDead() {
+	boolean[][] killMe = new boolean[board.length][board.length];
+	for (int row = 0; row < killMe.length; row ++) {
+	    for (int col = 0; col < killMe.length; col++) {
+		killMe[row][col] = board[row][col] != 'e';
+	    }
+	}
     }
 
     public static void main(String[] args) {
-	ArrayTest test = new ArrayTest(10);
-	test.click(3, 3, 2);
-	System.out.println(test.goBoard[3][3].getIsOccupied());
+	ArrayTest tester = new ArrayTest(10);
+        System.out.println(tester.placeStone(6, 3, 'b'));
+	System.out.println(tester.placeStone(6, 3, 'b'));
+	System.out.println(tester.getStatus(6, 3));
     }
 }
-	
