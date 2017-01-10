@@ -241,6 +241,11 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	if (event.equals("resign")) {
 	    pass.setActionCommand("turkey");
 	    resign.setActionCommand("turkey");
+	    for (int row = 0; row < boardGUI.length; row ++) {
+		for (int col = 0; col < boardGUI[row].length; col ++) {
+		    boardGUI[row][col].setActionCommand("turkey");
+		}
+	    }
 	    String s = currentPlayerL.getText();
 	    if (s.equals("Black to play")) {
 		currentPlayerL.setText("White wins by forfeit!");
