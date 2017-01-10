@@ -60,8 +60,8 @@ public class Go extends JFrame implements ActionListener {
 	String event = e.getActionCommand();
 	if (event.equals("Run")) {
 	    dispose();
-	    GoBoardFrame b = new GoBoardFrame(9,9);
-	    // ^set this to variable dimensions later
+	    GoBoardFrame b = new GoBoardFrame(5,5,6.5,0);
+	    // ^set this to variables later
 	    b.setVisible(true);
 	    b.setLocationRelativeTo(null);
 	}
@@ -78,22 +78,60 @@ class GoBoardFrame extends JFrame implements ActionListener {
     private Container pane;
     private char currentPlayer;
     private char[][] board;
-    private JLabel currentPlayerL,message;             //top of window
-    private JLabel blackPrisoners,whitePrisoners,komi; //scoreBoard
-    private JButton[][] boardGUI;                      //boardPanel
-    private JButton pass,resign;                       //buttonPanel
+    private int blackPrisoners,whitePrisoners;
+    private double komi;
+    private int handicap;
+    private JButton[][] boardGUI;
+    private JLabel currentPlayerL,messageL;               //top of window
+    private JLabel blackPrisonersL,whitePrisonersL,komiL; //scoreBoard
+    private JButton pass,resign;                          //buttonPanel
     private JPanel boardPanel,scoreBoard,buttonPanel;
 
     private JButton button;
 
-    public GoBoardFrame(int x,int y) {
+    public GoBoardFrame(int x,int y, double komi, int handicap) {
 	this.setTitle("Go");
 	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     
 	pane = this.getContentPane();
 	pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 	
-	currentPlayerL = new JLabel("Black to play");
+	currentPlayer = 'B';
+	
+	board = new char[x][y];
+
+	blackPrisoners = 0;
+
+	whitePrisoners = 0;
+
+	this.komi = komi;
+
+	this.handicap = handicap;
+	
+	boardGUI = new JButton[x][y];
+	
+	String currentPlayerS = "Black to play";
+	currentPlayerL = new JLabel(currentPlayerS);
+	
+	String messageS = "Handicap Moves Left: "+handicap;
+	messageL = new JLabel(messageS);
+
+	String blackPrisonersS = "Black Captures: "+blackPrisoners;
+	blackPrisonersL = new JLabel(blackPrisonersS);
+
+	String whitePrisonersS = "White Captures: "+whitePrisoners;
+	whitePrisonersL = new JLabel(whitePrisonersS);
+
+	String komiS = "Komi: "+komi;
+	komiL = new JLabel(komiS);
+
+	pass = new JButton("Pass");
+	pass.addActionListener(this);
+	pass.setActionCommand("pass");
+
+	resign = new JButton("Resign");
+	resign.addActionListener(this);
+	resign.setActionCommand("resign");
 
 	boardPanel = new JPanel();
 	boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.Y_AXIS));
@@ -101,6 +139,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    JPanel boardRow = new JPanel();
 	    boardRow.setLayout(new FlowLayout());
 	    for (int col=0 ; col<y ; col++){
+		board[row][col] = 'E';
 		try {
 		    Image buttonImage = ImageIO.read(new File("temp.png"));
 		    button = new JButton(new ImageIcon(buttonImage));
@@ -110,31 +149,32 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		    boardRow.add(button);
 
 		    button.addActionListener(this);
-		    button.setActionCommand("test");
+		    button.setActionCommand(x+","+y);
+
+		    boardGUI[row][col] = button;
 		}catch (IOException e){
 		    System.out.println(e);
 		}
 	    }
 	    boardPanel.add(boardRow);
 	}
-		
-	/*
-	  try {
-	  Image middle = ImageIO.read(new File("temp.png"));
-	  button = new JButton(new ImageIcon(middle));
-	  button.setBorder(BorderFactory.createEmptyBorder());
-	  button.setContentAreaFilled(false);
 
-	  pane.add(button);
+	scoreBoard = new JPanel();
+	scoreBoard.setLayout(new FlowLayout());
+	scoreBoard.add(blackPrisonersL);
+	scoreBoard.add(whitePrisonersL);
+	scoreBoard.add(komiL);
 
-	  button.addActionListener(this);
-	  button.setActionCommand("test");
-	  }catch (IOException e){
-	  System.out.println(e);
-	  }*/
-
+	buttonPanel = new JPanel();
+	buttonPanel.setLayout(new FlowLayout());
+	buttonPanel.add(pass);
+	buttonPanel.add(resign);
+	
 	pane.add(currentPlayerL);
+	pane.add(messageL);
 	pane.add(boardPanel);
+	pane.add(scoreBoard);
+	pane.add(buttonPanel);
 	
 	pack();
     }
