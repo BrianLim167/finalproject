@@ -338,7 +338,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 			// ^coordinates of adjacent space
 			System.out.println(Arrays.toString(adj));
 			if (board[adj[0]][adj[1]] == 'E' ||
-			    (board[adj[0]][adj[1]] == me &&
+			    (board[adj[0]][adj[1]] == board[coord[0]][coord[1]] &&
 			     ans[adj[0]][adj[1]] == false))
 			    {
 				ans[coord[0]][coord[1]] = false;
