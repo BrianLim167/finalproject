@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Go extends JFrame implements ActionListener {
     private Container pane;
@@ -192,5 +193,65 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    this.setTitle("Stop");
 	}
     }
+    public static boolean[][] markDead(char[][] board,char me) {
+	//me is the player whose move it is
+	boolean[][] ans = new boolean[board.length][board[0].length];
+	ArrayList<int[]> marked = new ArrayList<int[]>(); //list of marked stones
+	
+	char you; //you is the other player
+	if (me=='B'){
+	    you = 'W';
+	}else{
+	    you = 'B';
+	}
 
+	//begins by marking all stones as dead
+	for (int row=0 ; row<board.length ; row++){
+	    for (int col=0 ; col<board.length ; col++){
+		if (board[row][col] != 'E'){
+		    ans[row][col] = true;
+		    int[] coord = {row,col};
+		    marked.add(coord);
+		}
+	    }
+	}
+	
+	boolean[][]oldAns = new boolean[board.length][board[0].length];
+	//System.out.println(oldAns[0][0]);
+	//System.out.println(".");
+	//System.out.println(ans[0][0]);
+	while (ans != oldAns){
+	    oldAns = ans;
+	    for (int ind=0 ; ind<marked.size() ; ind++){
+	    }
+	}
+	return ans;
+    }
+    public static ArrayList<int[]> neighbors(int[] coord,int[] dimensions){
+	//returns list of coordinates of a space's neighbors
+	ArrayList<int[]> ans = new ArrayList<int[]>();
+	int[] neighbor = new int[2]; 
+	if (coord[0] > 0){
+	    neighbor[0] = coord[0]-1;
+	    neighbor[1] = coord[1];
+	    ans.add(neighbor);
+	}
+	if (coord[0] < dimensions[0]){
+	    neighbor[0] = coord[0]+1;
+	    neighbor[1] = coord[1];
+	    ans.add(neighbor);
+	}
+	if (coord[1] > 0){
+	    neighbor[0] = coord[0];
+	    neighbor[1] = coord[1]-1;
+	    ans.add(neighbor);
+	}
+	if (coord[1] < dimensions[1]){
+	    neighbor[0] = coord[0];
+	    neighbor[1] = coord[1]+1;
+	    ans.add(neighbor);
+	}
+	return ans;
+    }
+	
 }
