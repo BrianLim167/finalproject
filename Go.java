@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Go extends JFrame implements ActionListener {
     private Container pane;
@@ -272,7 +273,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		}
 		for (int row = 0; row < isDead.length; row ++) {
 		    for (int col = 0; col < isDead[row].length; col ++) {
-			if (isDead[row][col] == false) {
+			if (isDead[row][col] == true) {
 			    boardGUI[row][col].setIcon(new ImageIcon("temp.png"));
 			    board[row][col] = 'E';
 			}
@@ -305,13 +306,23 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		}
 	    }
 	}
-	
-	boolean[][]oldAns = new boolean[board.length][board[0].length];
+        
+
+	for (int[] array : marked) {
+	    System.out.println("-ary-");
+	    for (int o : array) {
+		System.out.println("item: " + o);
+	    }
+	}
+	System.out.println("=end=\n\n");
+
+	//boolean[][]oldAns = new boolean[board.length][board[0].length];
 	//System.out.println(oldAns[0][0]);
 	//System.out.println(".");
 	//System.out.println(ans[0][0]);
-	while (ans != oldAns){
-	    oldAns = ans;
+	//	while (ans != oldAns){
+	for (int n=0 ; n<360 ; n++){
+	    //oldAns = ans;
 	    for (int stone=marked.size()-1 ; stone>=0 ; stone--){
 		int[] coord = new int[2];   //coordinates of this stone
 		coord[0] = marked.get(stone)[0];
@@ -325,12 +336,13 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		    {
 			int[] adj = neighbors(coord,dimensions).get(neighbor);
 			// ^coordinates of adjacent space
+			System.out.println(Arrays.toString(adj));
 			if (board[adj[0]][adj[1]] == 'E' ||
-			    board[adj[0]][adj[1]] == me &&
-			    ans[adj[0]][adj[1]] == false)
+			    (board[adj[0]][adj[1]] == me &&
+			     ans[adj[0]][adj[1]] == false))
 			    {
 				ans[coord[0]][coord[1]] = false;
-				marked.remove(stone);
+				//marked.remove(stone);
 			    }
 		    }
 	    }
@@ -340,28 +352,37 @@ class GoBoardFrame extends JFrame implements ActionListener {
     }
     public static ArrayList<int[]> neighbors(int[] coord,int[] dimensions){
 	//returns list of coordinates of a space's neighbors
-	ArrayList<int[]> ans = new ArrayList<int[]>();
-	int[] neighbor = new int[2]; 
+	ArrayList<int[]> ans = new ArrayList<int[]>(); 
 	if (coord[0] > 0){
-	    neighbor[0] = coord[0]-1;
-	    neighbor[1] = coord[1];
-	    ans.add(neighbor);
+	    int[] neighbor0 = new int[2];
+	    neighbor0[0] = coord[0]-1;
+	    neighbor0[1] = coord[1];
+	    ans.add(neighbor0);
 	}
-	if (coord[0] < dimensions[0]){
-	    neighbor[0] = coord[0]+1;
-	    neighbor[1] = coord[1];
-	    ans.add(neighbor);
+	if (coord[0] < dimensions[0]-1){
+	    int[] neighbor1 = new int[2];
+	    neighbor1[0] = coord[0]+1;
+	    neighbor1[1] = coord[1];
+	    ans.add(neighbor1);
 	}
 	if (coord[1] > 0){
-	    neighbor[0] = coord[0];
-	    neighbor[1] = coord[1]-1;
-	    ans.add(neighbor);
+	    int[] neighbor2 = new int[2];
+	    neighbor2[0] = coord[0];
+	    neighbor2[1] = coord[1]-1;
+	    ans.add(neighbor2);
 	}
-	if (coord[1] < dimensions[1]){
-	    neighbor[0] = coord[0];
-	    neighbor[1] = coord[1]+1;
-	    ans.add(neighbor);
+	if (coord[1] < dimensions[1]-1){
+	    int[] neighbor3 = new int[2];
+	    neighbor3[0] = coord[0];
+	    neighbor3[1] = coord[1]+1;
+	    ans.add(neighbor3);
 	}
+	//	for (int[] array : ans) {
+	//  System.out.println("-ary-");
+	//  for (int o : neighbor) {
+	//	System.out.println("item: " + o);
+	//}
+	//}
 	return ans;
     }
 	
