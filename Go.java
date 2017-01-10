@@ -85,7 +85,7 @@ public class Go extends JFrame implements ActionListener {
 class GoBoardFrame extends JFrame implements ActionListener {
     private Container pane;
     private char currentPlayer;
-    private char[][] board;
+    private char[][] board; // B = black, W = white, E = empty
     private int blackPrisoners,whitePrisoners;
     private double komi;
     private int handicap;
@@ -152,7 +152,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    ((FlowLayout)boardRow.getLayout()).setVgap(0);
 	    for (int col=0 ; col<y ; col++){
 		board[row][col] = 'E';
-		try {
+		/*try {
 		    Image buttonImage = ImageIO.read(new File("temp.png"));
 		    button = new JButton(new ImageIcon(buttonImage));
 		    button.setBorder(BorderFactory.createEmptyBorder());
@@ -161,12 +161,23 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		    boardRow.add(button);
 
 		    button.addActionListener(this);
-		    button.setActionCommand(x+","+y);
+		    button.setActionCommand(row + "," + col);
 
 		    boardGUI[row][col] = button;
 		}catch (IOException e){
 		    System.out.println(e);
-		}
+		    }*/
+		Icon buttonImage = new ImageIcon("temp.png");
+		button = new JButton(buttonImage);
+		button.setBorder(BorderFactory.createEmptyBorder());
+		button.setContentAreaFilled(false);
+
+		boardRow.add(button);
+
+		button.addActionListener(this);
+		button.setActionCommand(row + "," + col);
+		
+		boardGUI[row][col] = button;
 	    }
 	    boardPanel.add(boardRow);
 	}
@@ -190,6 +201,31 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	
 	pack();
     }
+
+    public boolean placeStone(int row, int col) {
+	if (board[row][col] != 'E') {
+	    return false; // unable to place stone in occupied space
+	}
+
+	char player = 'E';
+	
+	Icon i = new ImageIcon("black.png");
+	String s = currentPlayerL.getText();
+	if (s.equals("Black to play")) {
+	    player = 'B';
+	    i = new ImageIcon("black.png");
+	}
+	if (s.equals("White to play")) {
+	    player = 'W';
+	    i = new ImageIcon("white.png");
+	}
+	boardGUI[row][col].setIcon(i);
+        
+	board[row][col] = player;
+	return true;
+    }
+
+    
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
 	if (event.equals("pass")) {
@@ -205,12 +241,26 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	if (event.equals("resign")) {
 	    pass.setActionCommand("turkey");
 	    resign.setActionCommand("turkey");
-	    String s = currentPlayerL.getText().substring(0, 5);
-	    if (s.equals("Black")) {
+	    String s = currentPlayerL.getText();
+	    if (s.equals("Black to play")) {
 		currentPlayerL.setText("White wins by forfeit!");
 	    }
-	    if (s.equals("White")) {
+	    if (s.equals("White to play")) {
 		currentPlayerL.setText("Black wins by forfeit!");
+	    }
+	}
+
+	if (event.indexOf(",") > -1) { // comma means it's an x,y coordinate
+	    int x = Integer.parseInt(event.substring(0, event.indexOf(",")));
+	    int y = Integer.parseInt(event.substring(event.indexOf(",") + 1));
+	    String s = currentPlayerL.getText();
+	    if (placeStone(x, y)) {
+	        if (s.equals("Black to play")) {
+		    currentPlayerL.setText("White to play");
+		}
+		if (s.equals("White to play")) {
+		    currentPlayerL.setText("Black to play");
+		}
 	    }
 	}
     }
