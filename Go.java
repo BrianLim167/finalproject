@@ -335,19 +335,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    }
 	}
         
-
-	for (int[] array : marked) {
-	    System.out.println("-ary-");
-	    for (int o : array) {
-		System.out.println("item: " + o);
-	    }
-	}
-	System.out.println("=end=\n\n");
-
 	boolean[][]oldAns = new boolean[board.length][board[0].length];
-	//System.out.println(oldAns[0][0]);
-	//System.out.println(".");
-	//System.out.println(ans[0][0]);
 	while (ans != oldAns){
 	    for (int n=0 ; n<360 ; n++){
 		oldAns = ans;
@@ -364,7 +352,6 @@ class GoBoardFrame extends JFrame implements ActionListener {
 			{
 			    int[] adj = neighbors(coord,dimensions).get(neighbor);
 			    // ^coordinates of adjacent space
-			    System.out.println(Arrays.toString(adj));
 			    if (board[adj[0]][adj[1]] == 'E' ||
 				(board[adj[0]][adj[1]] == board[coord[0]][coord[1]] &&
 				 ans[adj[0]][adj[1]] == false))
@@ -376,8 +363,25 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		}
 	    }
 	}
+	//determine what color of stones are marked
+	boolean selfCapture = false;
+	boolean otherCapture = false;
+	for (int row=0 ; row<ans.length ; row++){
+	    for (int col=0 ; col<ans.length ; col++){
+		if (ans[row][col] && board[row][col] == me){
+		    selfCapture = true;
+		}else if (ans[row][col] && board[row][col] == you){
+		    otherCapture = true;
+		}
+	    }
+	}
+	if (selfCapture && otherCapture){ //pseudosuicidal move case
+	    //for (int row=0 ; row<ans
+	}else if (selfCapture){ //suicidal move case
+	}
 	return ans;
     }
+
     public static ArrayList<int[]> neighbors(int[] coord,int[] dimensions){
 	//returns list of coordinates of a space's neighbors
 	ArrayList<int[]> ans = new ArrayList<int[]>(); 
@@ -405,31 +409,8 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    neighbor3[1] = coord[1]+1;
 	    ans.add(neighbor3);
 	}
-	//	for (int[] array : ans) {
-	//  System.out.println("-ary-");
-	//  for (int o : neighbor) {
-	//	System.out.println("item: " + o);
-	//}
-	//}
 	return ans;
     }
-	
-    //=======
-    /*
-      if (event.indexOf(",") > -1) { // comma means it's an x,y coordinate
-      int x = Integer.parseInt(event.substring(0, event.indexOf(",")));
-      int y = Integer.parseInt(event.substring(event.indexOf(",") + 1));
-      String s = currentPlayerL.getText();
-      if (placeStone(x, y)) {
-      if (s.equals("Black to play")) {
-      currentPlayerL.setText("White to play");
-      }
-      if (s.equals("White to play")) {
-      currentPlayerL.setText("Black to play");
-      }
-      }
-      }
-      }*/
-    //>>>>>>> 2dc6b6f25bddeb38e18e96ad002374ad08eeb2dd
+        
 }
 
