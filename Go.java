@@ -282,9 +282,17 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    if (placeStone(x, y)) {
 		char me;
 	        if (s.equals("Black to play")) {
-		    me = 'B';
-		    currentPlayerL.setText("White to play");
-		    isDead = markDead(board, 'B');
+		    int temp = Integer.parseInt(messageL.getText().substring(21));
+		    if (temp == 0) {
+			me = 'B';
+			currentPlayerL.setText("White to play");
+			isDead = markDead(board, 'B');
+		    }
+		    else {
+			temp -= 1;
+			messageL.setText("Handicap Moves Left: " + temp);
+			isDead = markDead(board, 'W');
+		    }
 		}
 	        else {
 		    me = 'W';
