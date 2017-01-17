@@ -157,21 +157,6 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    ((FlowLayout)boardRow.getLayout()).setVgap(0);
 	    for (int col=0 ; col<y ; col++){
 		board[row][col] = 'E';
-		/*try {
-		    Image buttonImage = ImageIO.read(new File("temp.png"));
-		    button = new JButton(new ImageIcon(buttonImage));
-		    button.setBorder(BorderFactory.createEmptyBorder());
-		    button.setContentAreaFilled(false);
-
-		    boardRow.add(button);
-
-		    button.addActionListener(this);
-		    button.setActionCommand(row + "," + col);
-
-		    boardGUI[row][col] = button;
-		}catch (IOException e){
-		    System.out.println(e);
-		    }*/
 		Icon buttonImage = new ImageIcon("temp.png");
 		button = new JButton(buttonImage);
 		button.setBorder(BorderFactory.createEmptyBorder());
@@ -233,6 +218,18 @@ class GoBoardFrame extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
+	char[][]oldBoard = new char[board.length][board[0].length];
+	for (int row=0 ; row<board.length ; row++){
+	    for (int col=0 ; col<board[0].length ; col++){
+		oldBoard[row][col] = board[row][col];
+	    }
+	}
+	Icon[][]oldBoardGUI = new Icon[boardGUI.length][boardGUI[0].length];
+	for (int row=0 ; row<boardGUI.length ; row++){
+	    for (int col=0 ; col<boardGUI[0].length ; col++){
+		oldBoardGUI[row][col] = boardGUI[row][col].getIcon();
+	    }
+	}
 	if (event.equals("pass")) {
 	    if (passed == true){
 		pass.setActionCommand("turkey");
@@ -279,45 +276,67 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    int y = Integer.parseInt(event.substring(event.indexOf(",") + 1));
 	    boolean[][] isDead;
 	    String s = currentPlayerL.getText();
-	    if (placeStone(x, y)) {
-		char me;
-	        if (s.equals("Black to play")) {
-		    int temp = Integer.parseInt(messageL.getText().substring(21));
-		    if (temp == 0) {
-			me = 'B';
-			currentPlayerL.setText("White to play");
-			isDead = markDead(board, 'B');
+	    try {
+		if (placeStone(x, y)) {
+		    char me;
+		    if (s.equals("Black to play")) {
+			//int temp = Integer.parseInt(messageL.getText().substring(21));
+			if (handicap == 0) {
+			    me = 'B';
+			    currentPlayerL.setText("White to play");
+			    isDead = markDead(board, 'B');
+			}
+			else {
+			    handicap -= 1;
+			    messageL.setText("Handicap Moves Left: " + handicap);
+			    isDead = markDead(board, 'W');
+			}
 		    }
 		    else {
-			temp -= 1;
-			messageL.setText("Handicap Moves Left: " + temp);
+			me = 'W';
+			messageL.setText(" ");
+			currentPlayerL.setText("Black to play");
 			isDead = markDead(board, 'W');
 		    }
-		}
-	        else {
-		    me = 'W';
-		    currentPlayerL.setText("Black to play");
-		    isDead = markDead(board, 'W');
-		}
-		for (int row = 0; row < isDead.length; row ++) {
-		    for (int col = 0; col < isDead[row].length; col ++) {
-			if (isDead[row][col] == true) {
-			    if (board[row][col] == 'B') {
-				whitePrisoners++;
+		    for (int row = 0; row < isDead.length; row ++) {
+			for (int col = 0; col < isDead[row].length; col ++) {
+			    if (isDead[row][col] == true) {
+				if (board[row][col] == 'B') {
+				    whitePrisoners++;
+				}
+				else {
+				    blackPrisoners++;
+				}
+				boardGUI[row][col].setIcon(new ImageIcon("temp.png"));
+				board[row][col] = 'E';
 			    }
-			    else {
-				blackPrisoners++;
-			    }
-			    boardGUI[row][col].setIcon(new ImageIcon("temp.png"));
-			    board[row][col] = 'E';
+			}
+		    }
+		    blackPrisonersL.setText("Black Captures: "+blackPrisoners);
+		    whitePrisonersL.setText("White Captures: "+whitePrisoners);
+		}
+	    }catch(IllegalArgumentException exc){
+		if (exc.getMessage().equals("move that gets own stones captured is suicidal")){
+		    messageL.setText("Suicidal Move");
+		    if (s.equals("Black to play")) {
+			currentPlayerL.setText("Black to play");
+		    }
+		    if (s.equals("White to play")) {
+			currentPlayerL.setText("White to play");
+		    }
+		    for (int row=0 ; row<board.length ; row++){
+			for (int col=0 ; col<board[0].length ; col++){
+			    board[row][col] = oldBoard[row][col];
+			}
+		    }
+		    for (int row=0 ; row<boardGUI.length ; row++){
+			for (int col=0 ; col<boardGUI[0].length ; col++){
+			    boardGUI[row][col].setIcon(oldBoardGUI[row][col]);
 			}
 		    }
 		}
-		blackPrisonersL.setText("Black Captures: "+blackPrisoners);
-		whitePrisonersL.setText("White Captures: "+whitePrisoners);
 	    }
 	}
-	
 	//<<<<<<< HEAD
     }
     public static boolean[][] markDead(char[][] board,char me) {
@@ -384,8 +403,15 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    }
 	}
 	if (selfCapture && otherCapture){ //pseudosuicidal move case
-	    //for (int row=0 ; row<ans
+	    for (int row=0 ; row<ans.length ; row++){
+		for (int col=0 ; col<ans[0].length ; col++){
+		    if (ans[row][col] == true && board[row][col] == me){
+			ans[row][col] = false;
+		    }
+		}
+	    }
 	}else if (selfCapture){ //suicidal move case
+	    throw new IllegalArgumentException("move that gets own stones captured is suicidal");	    
 	}
 	return ans;
     }
