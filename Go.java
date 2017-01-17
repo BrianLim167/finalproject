@@ -87,7 +87,7 @@ public class Go extends JFrame implements ActionListener {
 class GoBoardFrame extends JFrame implements ActionListener {
     private Container pane;
     private char currentPlayer;
-    private char[][] board; // B = black, W = white, E = empty
+    private char[][] board,tempBoard,prevBoard; // B = black, W = white, E = empty
     private int blackPrisoners,whitePrisoners;
     private double komi;
     private int handicap;
@@ -110,6 +110,8 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	currentPlayer = 'B';
 	
 	board = new char[x][y];
+	tempBoard = new char[x][y];
+	prevBoard = new char[x][y];
 
 	blackPrisoners = 0;
 
@@ -157,6 +159,8 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    ((FlowLayout)boardRow.getLayout()).setVgap(0);
 	    for (int col=0 ; col<y ; col++){
 		board[row][col] = 'E';
+		tempBoard[row][col] = 'E';
+		prevBoard[row][col] = 'E';
 		Icon buttonImage = new ImageIcon("temp.png");
 		button = new JButton(buttonImage);
 		button.setBorder(BorderFactory.createEmptyBorder());
@@ -312,88 +316,110 @@ class GoBoardFrame extends JFrame implements ActionListener {
 			    }
 			}
 		    }
+		    boolean ko = true;
+		    for (int row=0 ; row<board.length ; row++){
+			for (int col=0 ; col<board[0].length ; col++){
+			    if (board[row][col] != prevBoard[row][col]){
+				ko = false;
+			    }
+			}
+		    }
+		    if (ko){
+			throw new IllegalArgumentException("move that gets the board to repeat is an illegal ko move");
+		    }
 		    blackPrisonersL.setText("Black Captures: "+blackPrisoners);
 		    whitePrisonersL.setText("White Captures: "+whitePrisoners);
 		}
 	    }catch(IllegalArgumentException exc){
 		if (exc.getMessage().equals("move that gets own stones captured is suicidal")){
 		    messageL.setText("Suicidal Move");
-		    if (s.equals("Black to play")) {
-			currentPlayerL.setText("Black to play");
+		}else if(exc.getMessage().equals("move that gets the board to repeat is an illegal ko move")){
+		    messageL.setText("Illegal Ko Move");
+		}
+		if (s.equals("Black to play")) {
+		    currentPlayerL.setText("Black to play");
+		}
+		if (s.equals("White to play")) {
+		    currentPlayerL.setText("White to play");
+		}
+		for (int row=0 ; row<board.length ; row++){
+		    for (int col=0 ; col<board[0].length ; col++){
+			board[row][col] = oldBoard[row][col];
 		    }
-		    if (s.equals("White to play")) {
-			currentPlayerL.setText("White to play");
-		    }
-		    for (int row=0 ; row<board.length ; row++){
-			for (int col=0 ; col<board[0].length ; col++){
-			    board[row][col] = oldBoard[row][col];
-			}
-		    }
-		    for (int row=0 ; row<boardGUI.length ; row++){
-			for (int col=0 ; col<boardGUI[0].length ; col++){
-			    boardGUI[row][col].setIcon(oldBoardGUI[row][col]);
-			}
+		}
+		for (int row=0 ; row<boardGUI.length ; row++){
+		    for (int col=0 ; col<boardGUI[0].length ; col++){
+			boardGUI[row][col].setIcon(oldBoardGUI[row][col]);
 		    }
 		}
 	    }
 	}
-	//<<<<<<< HEAD
+	for (int row=0 ; row<board.length ; row++){
+	    for (int col=0 ; col<board[0].length ; col++){
+		prevBoard[row][col] = tempBoard[row][col];
+	    }
+	}
+	for (int row=0 ; row<board.length ; row++){
+	    for (int col=0 ; col<board[0].length ; col++){
+		tempBoard[row][col] = board[row][col];
+	    }
+	}
     }
     public static boolean[][] markDead(char[][] board,char me) {
 	//me is the player whose move it is
 	boolean[][] ans = new boolean[board.length][board[0].length];
 	ArrayList<int[]> marked = new ArrayList<int[]>(); //list of marked stones
 	
-	char you; //you is the other player
-	if (me=='B'){
-	    you = 'W';
-	}else{
-	    you = 'B';
-	}
+	    char you; //you is the other player
+	    if (me=='B'){
+		you = 'W';
+	    }else{
+		you = 'B';
+	    }
 
-	//begins by marking all stones as dead
-	for (int row=0 ; row<board.length ; row++){
-	    for (int col=0 ; col<board.length ; col++){
-		if (board[row][col] != 'E'){
-		    ans[row][col] = true;
-		    int[] coord = {row,col};
-		    marked.add(coord);
+	    //begins by marking all stones as dead
+	    for (int row=0 ; row<board.length ; row++){
+		for (int col=0 ; col<board.length ; col++){
+		    if (board[row][col] != 'E'){
+			ans[row][col] = true;
+			int[] coord = {row,col};
+			marked.add(coord);
+		    }
 		}
 	    }
-	}
         
-	boolean[][]oldAns = new boolean[board.length][board[0].length];
-	while (ans != oldAns){
-	    for (int n=0 ; n<360 ; n++){
-		oldAns = ans;
-		for (int stone=marked.size()-1 ; stone>=0 ; stone--){
-		    int[] coord = new int[2];   //coordinates of this stone
-		    coord[0] = marked.get(stone)[0];
-		    coord[1] = marked.get(stone)[1];
-		    int[] dimensions = new int[2];
-		    dimensions[0] = board.length;
-		    dimensions[1] = board[0].length;
-		    for (int neighbor=0 ;
-			 neighbor<neighbors(coord,dimensions).size() ;
-			 neighbor++)
-			{
-			    int[] adj = neighbors(coord,dimensions).get(neighbor);
-			    // ^coordinates of adjacent space
-			    if (board[adj[0]][adj[1]] == 'E' ||
-				(board[adj[0]][adj[1]] == board[coord[0]][coord[1]] &&
-				 ans[adj[0]][adj[1]] == false))
-				{
-				    ans[coord[0]][coord[1]] = false;
-				    //marked.remove(stone);
-				}
-			}
+	    boolean[][]oldAns = new boolean[board.length][board[0].length];
+	    while (ans != oldAns){
+		for (int n=0 ; n<360 ; n++){
+		    oldAns = ans;
+		    for (int stone=marked.size()-1 ; stone>=0 ; stone--){
+			int[] coord = new int[2];   //coordinates of this stone
+			coord[0] = marked.get(stone)[0];
+			coord[1] = marked.get(stone)[1];
+			int[] dimensions = new int[2];
+			dimensions[0] = board.length;
+			dimensions[1] = board[0].length;
+			for (int neighbor=0 ;
+			     neighbor<neighbors(coord,dimensions).size() ;
+			     neighbor++)
+			    {
+				int[] adj = neighbors(coord,dimensions).get(neighbor);
+				// ^coordinates of adjacent space
+				if (board[adj[0]][adj[1]] == 'E' ||
+				    (board[adj[0]][adj[1]] == board[coord[0]][coord[1]] &&
+				     ans[adj[0]][adj[1]] == false))
+				    {
+					ans[coord[0]][coord[1]] = false;
+					//marked.remove(stone);
+				    }
+			    }
+		    }
 		}
 	    }
-	}
-	//determine what color of stones are marked
-	boolean selfCapture = false;
-	boolean otherCapture = false;
-	for (int row=0 ; row<ans.length ; row++){
+	    //determine what color of stones are marked
+	    boolean selfCapture = false;
+	    boolean otherCapture = false;
+	    for (int row=0 ; row<ans.length ; row++){
 	    for (int col=0 ; col<ans.length ; col++){
 		if (ans[row][col] && board[row][col] == me){
 		    selfCapture = true;
