@@ -292,6 +292,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 			if (handicap == 0) {
 			    me = 'B';
 			    currentPlayerL.setText("White to play");
+			    messageL.setText(" ");
 			    isDead = markDead(board, 'B');
 			}
 			else {
@@ -331,7 +332,6 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		    if (ko){
 			throw new IllegalArgumentException("move that gets the board to repeat is an illegal ko move");
 		    }
-		    messageL.setText(" ");
 		    blackPrisonersL.setText("Black Captures: "+blackPrisoners);
 		    whitePrisonersL.setText("White Captures: "+whitePrisoners);
 		    newTurn = true;
