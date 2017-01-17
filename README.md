@@ -16,12 +16,12 @@
 		<li>Black and white pieces will automatically be removed from the board and added to the capturer's points.</li>
 		<li>Pass and resign buttons will end the game and either immediately award the opponent the victory or otherwise just end the game (scores can be manually tallied).</li>
 		<li>Try capturing a group of stones by surrounding it on all sides with either the opposite color or the sides of the board.</li>
-		<li>Try doing a suicidal move; a suicidal move is defined as a move where if you put down a Go piece in a particular spot, it will instantly be captured due to being surrounded on all sides. It's against the official Go rules to make a suicidal move, and as such the program prevents you from doing one.</li>
+		<li>Try doing a suicidal move; a suicidal move is defined as a move where if you put down a Go piece in a particular spot, it will instantly be captured due to being surrounded on all sides. It's against the official Go rules to make a suicidal move, and as such the program prevents you from doing one. However, a move that gets the stones of both players surrounded at the same time is not suicidal; in that case, the stones of the player who played the move survive and the other stones die.</li>
 		<li>Additionally, try doing a <a href="http://senseis.xmp.net/?Ko">ko move</a>. A ko move is a move that would set the board to become exactly like it was two turns ago (if black does a ko move, it would set the board to become identical to how it was when it was last black's turn, for example). Like suicidal moves, ko moves are banned in a regular game of Go, and as such the program prevents you from doing one.</li>
 	</ul>
 	<font size="4"><b>List of Unresolved Bugs/Issues</b></font>
 	<ul>
-		<li>Some edge cases (such as <a href="http://senseis.xmp.net/?EternalLife">Eternal Life</a> or <a href="http://senseis.xmp.net/?TripleKo">Triple Ko</a>) exist in the actual Go game in which it's possible to loop a cycle of capturing stones forever and thus create a stalemate. There are very niche rules that forbid this from happening, but they have not been implemented into our final version of the project.</li>
+		<li>Some edge cases (such as <a href="http://senseis.xmp.net/?EternalLife">Eternal Life</a> or <a href="http://senseis.xmp.net/?TripleKo">Triple Ko</a>) exist in the actual Go game in which it's possible to loop a cycle of capturing stones forever and thus create a stalemate. There are very niche rules that forbid this from happening, but they have not been implemented into our final version of the project because these situations are extremely rare.</li>
 	</ul>
 	<font size="4"><b>How to Compile and Run Our Program</b></font>
 	<ul>
