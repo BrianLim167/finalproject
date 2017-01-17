@@ -222,6 +222,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent e) {
 	String event = e.getActionCommand();
+	boolean newTurn = false;
 	char[][]oldBoard = new char[board.length][board[0].length];
 	for (int row=0 ; row<board.length ; row++){
 	    for (int col=0 ; col<board[0].length ; col++){
@@ -245,6 +246,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		}
 		currentPlayerL.setText("Game has ended.");
 	    }
+	    messageL.setText(" ");
 	    passed = true;
 	    String s = currentPlayerL.getText();
 	    if (s.equals("Black to play")) {
@@ -253,12 +255,14 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	    if (s.equals("White to play")) {
 		currentPlayerL.setText("Black to play");
 	    }
+	    newTurn = true;
 	}
 	else {
 	    passed = false;
 	}
 
 	if (event.equals("resign")) {
+	    messageL.setText(" ");
 	    pass.setActionCommand("turkey");
 	    resign.setActionCommand("turkey");
 	    for (int row = 0; row < boardGUI.length; row ++) {
@@ -327,8 +331,10 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		    if (ko){
 			throw new IllegalArgumentException("move that gets the board to repeat is an illegal ko move");
 		    }
+		    messageL.setText(" ");
 		    blackPrisonersL.setText("Black Captures: "+blackPrisoners);
 		    whitePrisonersL.setText("White Captures: "+whitePrisoners);
+		    newTurn = true;
 		}
 	    }catch(IllegalArgumentException exc){
 		if (exc.getMessage().equals("move that gets own stones captured is suicidal")){
@@ -352,16 +358,19 @@ class GoBoardFrame extends JFrame implements ActionListener {
 			boardGUI[row][col].setIcon(oldBoardGUI[row][col]);
 		    }
 		}
+		newTurn = false;
 	    }
 	}
-	for (int row=0 ; row<board.length ; row++){
-	    for (int col=0 ; col<board[0].length ; col++){
-		prevBoard[row][col] = tempBoard[row][col];
+	if (newTurn){
+	    for (int row=0 ; row<board.length ; row++){
+		for (int col=0 ; col<board[0].length ; col++){
+		    prevBoard[row][col] = tempBoard[row][col];
+		}
 	    }
-	}
-	for (int row=0 ; row<board.length ; row++){
-	    for (int col=0 ; col<board[0].length ; col++){
-		tempBoard[row][col] = board[row][col];
+	    for (int row=0 ; row<board.length ; row++){
+		for (int col=0 ; col<board[0].length ; col++){
+		    tempBoard[row][col] = board[row][col];
+		}
 	    }
 	}
     }
