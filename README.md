@@ -20,6 +20,7 @@
 	</ul>
 	<font size="4"><b>List of Unresolved Bugs/Issues</b></font>
 	<ul>
+		<li>When playing an illegal ko move, the move is prevented but score is still added as if the move was played successfully.</li>
 		<li>Some edge cases (such as <a href="http://senseis.xmp.net/?EternalLife">Eternal Life</a> or <a href="http://senseis.xmp.net/?TripleKo">Triple Ko</a>) exist in the actual Go game in which it's possible to loop a cycle of capturing stones forever and thus create a stalemate. There are very niche rules that forbid this from happening, but they have not been implemented into our final version of the project because these situations are extremely rare.</li>
 	</ul>
 	<font size="4"><b>How to Compile and Run Our Program</b></font>
