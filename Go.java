@@ -161,7 +161,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 		board[row][col] = 'E';
 		tempBoard[row][col] = 'E';
 		prevBoard[row][col] = 'E';
-		Icon buttonImage = new ImageIcon("temp.png");
+		Icon buttonImage = EIcon(row,col);
 		button = new JButton(buttonImage);
 		button.setBorder(BorderFactory.createEmptyBorder());
 		button.setContentAreaFilled(false);
@@ -316,7 +316,7 @@ class GoBoardFrame extends JFrame implements ActionListener {
 				else {
 				    blackPrisoners++;
 				}
-				boardGUI[row][col].setIcon(new ImageIcon("temp.png"));
+				boardGUI[row][col].setIcon(EIcon(row,col));
 				board[row][col] = 'E';
 			    }
 			}
@@ -480,6 +480,35 @@ class GoBoardFrame extends JFrame implements ActionListener {
 	}
 	return ans;
     }
-        
+    
+    public Icon EIcon(int row,int col){
+	Icon buttonImage;
+	if (row == 0){
+	    if (col == 0){
+		buttonImage = new ImageIcon("upLeft.png");
+	    }else if (col == board[0].length-1){
+		buttonImage = new ImageIcon("upRight.png");
+	    }else {
+		buttonImage = new ImageIcon("upMid.png");
+	    }
+	}else if (row == board.length-1){
+	    if (col == 0){
+		buttonImage = new ImageIcon("downLeft.png");
+	    }else if (col == board[0].length-1){
+		buttonImage = new ImageIcon("downRight.png");
+	    }else {
+		buttonImage = new ImageIcon("downMid.png");
+	    }
+	}else {
+	    if (col == 0){
+		buttonImage = new ImageIcon("midLeft.png");
+	    }else if (col == board[0].length-1){
+		buttonImage = new ImageIcon("midRight.png");
+	    }else {
+		buttonImage = new ImageIcon("midMid.png");
+	    }
+	}
+	return buttonImage;
+    }
 }
 
